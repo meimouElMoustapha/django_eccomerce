@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Name</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css'%}">
+    <style>
+        img{
+            width:100%;
+        }
+    </style>
+    {% block head %}
+    {% endblock %}
+</head>
+<body>
+   <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 px-0">
+                <nav class="navbar navbar-expand bg-dark navbar-dark">
+                    <a href="" class="navbar-brand">MyWebsite</a>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="{% url 'index' %}" class="nav-link">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'about'%}" class="nav-link">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'contact'%}" class="nav-link">Contact</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% block myblock %}
+            
+        {% endblock %}
+        <div class="row bg-dark text-light p-5">
+            <div class="col-md-4" style="border-right:2px solid white;">
+                <h4>Lorem Ipsum</h4>
+                <small>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam nam fuga animi fugiat minima tenetur ad modi, architecto saepe expedita quisquam. Sed eum soluta vel animi possimus delectus accusantium? Libero?</small>
+            </div>
+            <div class="col-md-4" style="border-right:2px solid white;">
+                <ul>
+                    <li>Link 1</li>
+                    <li>Link 2</li>
+                    <li>Link 3</li>
+                </ul>
+            </div>
+            <div class="col-md-4" style="border-right:2px solid white;">
+                <ul>
+                    <li>Link 1</li>
+                    <li>Link 2</li>
+                    <li>Link 3</li>
+                </ul>
+            </div>
+        </div>
+   </div>
+</body>
+</html>
