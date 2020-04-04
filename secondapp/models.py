@@ -17,4 +17,19 @@ class Student(models.Model):
 
     def __str__(self):
         return self.name+" "+str(self.roll_no)
+    
+    class Meta:
+        verbose_name_plural="Student"
 
+class Contact_Us(models.Model):
+    name = models.CharField(max_length=250)
+    contact_number = models.IntegerField(blank=True,unique=True)
+    subject = models.CharField(max_length=250)
+    message = models.TextField()
+    added_on =models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Contact Us"
