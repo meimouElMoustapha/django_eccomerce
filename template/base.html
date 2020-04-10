@@ -32,6 +32,14 @@
                         <li class="nav-item">
                             <a href="{% url 'contact'%}" class="nav-link">Contact</a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a href="" class="nav-link dropdown-toggle" data-toggle="dropdown">Categories</a>
+                            <div class="dropdown-menu">
+                                {% for c in category %}
+                                <a href="" class="dropdown-item">{{c.cat_name}}</a>
+                                {% endfor %}
+                            </div>
+                        </li>
                     </ul>
                 </nav>
             </div>

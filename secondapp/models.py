@@ -33,3 +33,16 @@ class Contact_Us(models.Model):
 
     class Meta:
         verbose_name_plural = "Contact Us"
+
+class Category(models.Model):
+    cat_name = models.CharField(max_length=250)
+    cover_pic = models.FileField(upload_to="media/%Y/%m/%d")
+    description = models.TextField()
+    added_on =models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.cat_name
+
+
+
+

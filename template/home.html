@@ -8,30 +8,32 @@
     .bg{
         height:200px;background:url("/static/images/nature.jpg");
     }
+    .myimg{
+        height:300px;
+    }
+    .box:hover{
+        height:100%;width:100%;background:rgba(0,0,0,0.5);color:white;
+    }
 </style>
 {% endblock %}
 {% block myblock %}
 <div class="container-fluid">
     <!-- <h1>HELLO THERE</h1> -->
     <div class="row">
+     <div class="col-md-12 text-center">
+        <h1>Our Categories ({{category|length}})</h1>
+     </div>
+     {% for c in category %}
         <div class="col-md-4 p-4 text-center">
-            <div style="box-shadow:0px 0px 10px black;" class="p-5">
-                <img src="{% static 'images/1.jpg'%}" alt="">
-                <small>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quidem similique veniam, consequuntur excepturi adipisci harum porro totam accusamus modi, odio quasi consectetur mollitia aliquam perspiciatis incidunt. Odio cumque blanditiis doloribus!</small>
+            <div style="box-shadow:0px 0px 10px black; background:url('/media/{{c.cover_pic}}');background-size:100% 100%;" class="myimg">
+                <!-- <img src="/media/{{c.cover_pic}}" height="200"> -->
+                <div  class="box" style="height:300px;">
+                    <h2>{{c.cat_name}}</h2>
+                    <p>{{c.description}}</p>
+                </div>
             </div>
         </div>
-        <div class="col-md-4 p-4 text-center">
-            <div style="box-shadow:0px 0px 10px black;" class="p-5">
-                <img src="{% static 'images/1.jpg'%}" alt="">
-                <small>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quidem similique veniam, consequuntur excepturi adipisci harum porro totam accusamus modi, odio quasi consectetur mollitia aliquam perspiciatis incidunt. Odio cumque blanditiis doloribus!</small>
-            </div>
-        </div>
-        <div class="col-md-4 p-4 text-center">
-            <div style="box-shadow:0px 0px 10px black;" class="p-5">
-                <img src="{% static 'images/1.jpg'%}" alt="">
-                <small>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quidem similique veniam, consequuntur excepturi adipisci harum porro totam accusamus modi, odio quasi consectetur mollitia aliquam perspiciatis incidunt. Odio cumque blanditiis doloribus!</small>
-            </div>
-        </div>
+    {% endfor %}
     </div>
     <div class="row">
         <div class="col-md-12">

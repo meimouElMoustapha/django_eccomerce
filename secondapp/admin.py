@@ -1,5 +1,5 @@
 from django.contrib import admin
-from secondapp.models import Student,Contact_Us
+from secondapp.models import Student,Contact_Us,Category
 
 admin.site.site_header="My Website | Second Project"
 
@@ -18,5 +18,9 @@ class Contact_UsAdmin(admin.ModelAdmin):
     list_filter = ["added_on","name"]
     list_editable = ["name"]
 
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ["id","cat_name","description","added_on"]
+
 admin.site.register(Student,StudentAdmin)
 admin.site.register(Contact_Us,Contact_UsAdmin)
+admin.site.register(Category,CategoryAdmin)
