@@ -30,3 +30,5 @@ def contactpage(request):
 
     return render(request,"contact.html",{"messages":all_data,"category":cats})
 
+def register(request):
+    return render(request,"register.html")
