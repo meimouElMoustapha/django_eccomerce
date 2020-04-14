@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from secondapp.models import Contact_Us, Category
+from secondapp.models import Contact_Us, Category, register_table
+from django.contrib.auth.models import User
 
 def index(request):
     recent = Contact_Us.objects.all().order_by("-id")[:5]
@@ -31,4 +32,23 @@ def contactpage(request):
     return render(request,"contact.html",{"messages":all_data,"category":cats})
 
 def register(request):
+    if request.method=="POST":
+        fname = request.POST["first"]
+        last = request.POST["last"]
+        un = request.POST["uname"]
+        pwd = request.POST["password"]
+        em = request.POST["email"]
+        con = request.POST["contact"]
+        tp = request.POST["utype"]
+        
+        usr = User.objects.create_user(un,em,pwd)
+        usr.first_name = fname
+        usr.last_name = last
+        if tp=="sell":
+            usr.is_staff = True
+        usr.save()
+
+        reg = register_table(user=usr, contact_number=con)
+        reg.save()
+        return render(request,"register.html",{"status":"Mr/Miss. {} your Account created Successfully".format(fname)})
     return render(request,"register.html")

@@ -44,6 +44,9 @@ class Category(models.Model):
         return self.cat_name
 
 class register_table(models.Model):
-    user = models.OneToOneField()
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    contact_number = models.IntegerField()
 
+    def __str__(self):
+        return self.user.username
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from secondapp.models import Student,Contact_Us,Category
+from secondapp.models import Student,Contact_Us,Category, register_table
 
 admin.site.site_header="My Website | Second Project"
 
@@ -24,3 +24,4 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(Student,StudentAdmin)
 admin.site.register(Contact_Us,Contact_UsAdmin)
 admin.site.register(Category,CategoryAdmin)
+admin.site.register(register_table)
