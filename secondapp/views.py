@@ -52,3 +52,12 @@ def register(request):
         reg.save()
         return render(request,"register.html",{"status":"Mr/Miss. {} your Account created Successfully".format(fname)})
     return render(request,"register.html")
+
+def check_user(request):
+    if request.method=="GET":
+        un = request.GET["usern"]
+        check = User.objects.filter(username=un)
+        if len(check) == 1:
+            return HttpResponse("Exists")
+        else:
+            return HttpResponse("Not Exists")
