@@ -66,4 +66,10 @@
         </div>
     </div>
 </div>
+{% if status %}
+    <script>
+        alert("{{status}}");
+        window.location="/"
+    </script>
+{% endif %}
 {% endblock %}
