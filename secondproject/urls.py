@@ -28,4 +28,7 @@ urlpatterns = [
     path("signup/",views.register,name="reg"),
     path("check_user/",views.check_user,name="check_user"),
     path("user_login",views.user_login,name="user_login"),
+    path("cust_dashboard/",views.cust_dashboard,name="cust_dashboard"),
+    path("seller_dashboard/",views.seller_dashboard,name="seller_dashboard"),
+    path("user_logout",views.user_logout,name="user_logout")
 ]+static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

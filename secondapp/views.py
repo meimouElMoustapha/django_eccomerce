@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from secondapp.models import Contact_Us, Category, register_table
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     recent = Contact_Us.objects.all().order_by("-id")[:5]
@@ -74,12 +75,28 @@ def user_login(request):
             if user.is_superuser:
                 return HttpResponseRedirect("/admin")
             if user.is_staff:
-                return HttpResponse("<h1 style='color:red;'>Welcome {} to Seller Dashboard</h1>".format(user.first_name))
+                return HttpResponseRedirect("/seller_dashboard")
             if user.is_active:
-                return HttpResponse("<h1 style='color:green;'>Welcome {} to Customer Dashboard</h1>".format(user.first_name))
+                return HttpResponseRedirect("/cust_dashboard")
                 
         else:
             return render(request,"home.html",{"status":"Invalid Username or Password"})
 
     return HttpResponse("Called")
+
+@login_required
+def cust_dashboard(request):
+    return render(request,"cust_dashboard.html")
+
+@login_required
+def seller_dashboard(request):
+    return render(request,"seller_dashboard.html")
+    
+@login_required
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect("/")
+
+
+
 
