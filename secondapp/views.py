@@ -97,6 +97,38 @@ def user_logout(request):
     logout(request)
     return HttpResponseRedirect("/")
 
+def edit_profile(request):
+    context = {}
+    data = register_table.objects.get(user__id=request.user.id)
+    context["data"]=data
+    if request.method=="POST":
+        print(request.FILES)
+        fn = request.POST["fname"]
+        ln = request.POST["lname"]
+        em = request.POST["email"]
+        con = request.POST["contact"]
+        age = request.POST["age"]
+        ct = request.POST["city"]
+        gen = request.POST["gender"]
+        occ = request.POST["occ"]
+        abt = request.POST["about"]
+
+        usr = User.objects.get(id=request.user.id)
+        usr.first_name = fn
+        usr.last_name = ln
+        usr.email = em
+        usr.save()
+
+        data.contact_number = con
+        data.age = age
+        data.city = ct
+        data.gender = gen
+        data.occupation = occ
+        data.about = abt
+        data.save()
+        context["status"] = "Changes Saved Successfully"
+    return render(request,"edit_profile.html",context)
+
 
 
 
