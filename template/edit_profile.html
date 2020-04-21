@@ -1,4 +1,5 @@
 {% extends "dashboard_base.html" %}
+{% load static %}
 {% block head %}
 <style>
     .bg-img{
@@ -13,6 +14,13 @@
             <h1>Dashboard &gt; Edit Profile</h1>
         </div>
         <div class="col-md-6 mx-auto p-3 bg-light my-2">
+            <div class="text-center">
+                {% if data.profile_pic %}
+                <img src="/media/{{data.profile_pic}}" style="height:150px;width:150px;border-radius:50%">
+                {% else %}
+                <img src="{% static 'images/user.png' %}" style="height:150px;width:150px;border-radius:50%">
+                {% endif %}
+            </div>
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% if status %}

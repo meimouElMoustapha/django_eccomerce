@@ -86,7 +86,8 @@ def user_login(request):
 
 @login_required
 def cust_dashboard(request):
-    return render(request,"cust_dashboard.html")
+    data = register_table.objects.get(user__id=request.user.id)
+    return render(request,"cust_dashboard.html",{"data":data})
 
 @login_required
 def seller_dashboard(request):
@@ -102,7 +103,6 @@ def edit_profile(request):
     data = register_table.objects.get(user__id=request.user.id)
     context["data"]=data
     if request.method=="POST":
-        print(request.FILES)
         fn = request.POST["fname"]
         ln = request.POST["lname"]
         em = request.POST["email"]
@@ -126,6 +126,13 @@ def edit_profile(request):
         data.occupation = occ
         data.about = abt
         data.save()
+
+        if "image" in request.FILES:
+            img = request.FILES["image"]
+            data.profile_pic = img
+            data.save()
+
+
         context["status"] = "Changes Saved Successfully"
     return render(request,"edit_profile.html",context)
 
