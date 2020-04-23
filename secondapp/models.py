@@ -58,3 +58,15 @@ class register_table(models.Model):
     def __str__(self):
         return self.user.username
 
+class add_product(models.Model):
+    seller = models.ForeignKey(User,on_delete=models.CASCADE)
+    product_name = models.CharField(max_length=250)
+    product_category = models.ForeignKey(Category,on_delete = models.CASCADE )
+    product_price = models.FloatField()
+    sale_price = models.FloatField()
+    product_image = models.ImageField(upload_to="products/%Y/%m/%d")
+    details = models.TextField()
+
+    def __str__(self):
+        return self.product_name
+

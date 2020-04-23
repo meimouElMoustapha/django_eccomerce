@@ -1,5 +1,5 @@
 from django.contrib import admin
-from secondapp.models import Student,Contact_Us,Category, register_table
+from secondapp.models import Student,Contact_Us,Category, register_table,add_product
 
 admin.site.site_header="My Website | Second Project"
 
@@ -25,3 +25,4 @@ admin.site.register(Student,StudentAdmin)
 admin.site.register(Contact_Us,Contact_UsAdmin)
 admin.site.register(Category,CategoryAdmin)
 admin.site.register(register_table)
+admin.site.register(add_product)
