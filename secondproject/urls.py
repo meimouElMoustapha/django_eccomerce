@@ -32,4 +32,5 @@ urlpatterns = [
     path("seller_dashboard/",views.seller_dashboard,name="seller_dashboard"),
     path("user_logout",views.user_logout,name="user_logout"),
     path("edit_profile",views.edit_profile,name="edit_profile"),
+    path("change_password",views.change_password,name="change_password"),
 ]+static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

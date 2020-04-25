@@ -136,6 +136,32 @@ def edit_profile(request):
         context["status"] = "Changes Saved Successfully"
     return render(request,"edit_profile.html",context)
 
+def change_password(request):
+    context={}
+    ch = register_table.objects.filter(user__id=request.user.id)
+    if len(ch)>0:
+        data = register_table.objects.get(user__id=request.user.id)
+        context["data"] = data
+    if request.method=="POST":
+        current = request.POST["cpwd"]
+        new_pas = request.POST["npwd"]
+        
+        user = User.objects.get(id=request.user.id)
+        un = user.username
+        check = user.check_password(current)
+        if check==True:
+            user.set_password(new_pas)
+            user.save()
+            context["msz"] = "Password Changed Successfully!!!"
+            context["col"] = "alert-success"
+            user = User.objects.get(username=un)
+            login(request,user)
+        else:
+            context["msz"] = "Incorrect Current Password"
+            context["col"] = "alert-danger"
+
+    return render(request,"change_password.html",context)
+
 
 
 
