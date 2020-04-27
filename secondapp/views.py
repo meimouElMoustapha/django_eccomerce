@@ -4,6 +4,7 @@ from secondapp.models import Contact_Us, Category, register_table
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
+from secondapp.forms import add_product_form
 
 def index(request):
     recent = Contact_Us.objects.all().order_by("-id")[:5]
@@ -86,8 +87,12 @@ def user_login(request):
 
 @login_required
 def cust_dashboard(request):
-    data = register_table.objects.get(user__id=request.user.id)
-    return render(request,"cust_dashboard.html",{"data":data})
+    context = {}
+    check = register_table.objects.filter(user__id=request.user.id)
+    if len(check)>0:
+        data = register_table.objects.get(user__id=request.user.id)
+        context["data"] = data
+    return render(request,"cust_dashboard.html",context)
 
 @login_required
 def seller_dashboard(request):
@@ -100,8 +105,10 @@ def user_logout(request):
 
 def edit_profile(request):
     context = {}
-    data = register_table.objects.get(user__id=request.user.id)
-    context["data"]=data
+    check = register_table.objects.filter(user__id=request.user.id)
+    if len(check)>0:
+        data = register_table.objects.get(user__id=request.user.id)
+        context["data"]=data    
     if request.method=="POST":
         fn = request.POST["fname"]
         ln = request.POST["lname"]
@@ -163,5 +170,13 @@ def change_password(request):
     return render(request,"change_password.html",context)
 
 
+def add_product_view(request):
+    context={}
+    ch = register_table.objects.filter(user__id=request.user.id)
+    if len(ch)>0:
+        data = register_table.objects.get(user__id=request.user.id)
+        context["data"] = data
+    form = add_product_form()
+    context["form"] = form
 
-
+    return render(request,"addproduct.html",context)

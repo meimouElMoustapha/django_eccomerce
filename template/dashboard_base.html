@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 {% load static %}
 {% block myblock %}
+{% if user.is_superuser %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mt-4">
+                <div class="jumbotron">
+                    <h1>Sorry Mr./Miss {{user.username}} You are not allowed Here</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
 <div class="container-fluid">
     <div class="row">
         <!-- left side menu -->
@@ -28,6 +39,9 @@
                         <a href="{% url 'change_password' %}" class="nav-link">Change Password</a>
                     </li>
                     <li class="nav-item">
+                        <a href="{% url 'add_product_view' %}" class="nav-link">Add Product</a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{% url 'user_logout' %}" class="nav-link">Logout</a>
                     </li>
                 </ul>
@@ -42,5 +56,5 @@
         </div>
     </div>
 </div>
-
+{% endif %}
 {% endblock %}
