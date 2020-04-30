@@ -30,8 +30,15 @@ urlpatterns = [
     path("user_login",views.user_login,name="user_login"),
     path("cust_dashboard/",views.cust_dashboard,name="cust_dashboard"),
     path("seller_dashboard/",views.seller_dashboard,name="seller_dashboard"),
-    path("user_logout",views.user_logout,name="user_logout"),
-    path("edit_profile",views.edit_profile,name="edit_profile"),
-    path("change_password",views.change_password,name="change_password"),
-    path("add_product",views.add_product_view,name="add_product_view")
+    path("user_logout/",views.user_logout,name="user_logout"),
+    path("edit_profile/",views.edit_profile,name="edit_profile"),
+    path("change_password/",views.change_password,name="change_password"),
+    path("add_product/",views.add_product_view,name="add_product_view"),
+    path("my_products/",views.my_products,name="my_products"),
+
+    path("single_product",views.single_product, name="single_product"),
+    path("update_product",views.update_product, name="update_product"),
+    path("delete_product",views.delete_product, name="delete_product"),
+    path("all_products",views.all_products, name="all_products"),
+    
 ]+static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

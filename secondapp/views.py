@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from secondapp.models import Contact_Us, Category, register_table
+from secondapp.models import Contact_Us, Category, register_table, add_product
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -75,10 +75,10 @@ def user_login(request):
             login(request,user)
             if user.is_superuser:
                 return HttpResponseRedirect("/admin")
-            if user.is_staff:
-                return HttpResponseRedirect("/seller_dashboard")
-            if user.is_active:
+            else:
                 return HttpResponseRedirect("/cust_dashboard")
+            # if user.is_active:
+            #     return HttpResponseRedirect("/cust_dashboard")
                 
         else:
             return render(request,"home.html",{"status":"Invalid Username or Password"})
@@ -177,6 +177,45 @@ def add_product_view(request):
         data = register_table.objects.get(user__id=request.user.id)
         context["data"] = data
     form = add_product_form()
+    if request.method=="POST":
+        form = add_product_form(request.POST,request.FILES)
+        if form.is_valid():
+            data = form.save(commit=False)
+            login_user =User.objects.get(username=request.user.username)
+            data.seller = login_user
+            data.save()
+            context["status"] ="{} Added Successfully".format(data.product_name)
+
     context["form"] = form
 
     return render(request,"addproduct.html",context)
+
+def my_products(request):
+    context = {}
+    ch = register_table.objects.filter(user__id=request.user.id)
+    if len(ch)>0:
+        data = register_table.objects.get(user__id=request.user.id)
+        context["data"] = data
+        
+    all = add_product.objects.filter(seller__id=request.user.id).order_by("-id")
+    context["products"] = all
+    return render(request,"myproducts.html",context)
+
+def single_product(request):
+    context = {}
+    id = request.GET["pid"]
+    obj = add_product.objects.get(id=id)
+    context["product"] = obj
+    return render(request,"single_product.html",context)
+
+def update_product(request):
+    pass
+
+def delete_product(request):
+    pass
+
+def all_products(request):
+    context = {}
+    all_products = add_product.objects.all().order_by("product_name")
+    context["products"] = all_products
+    return render(request,"allproducts.html",context)

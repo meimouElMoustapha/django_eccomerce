@@ -38,9 +38,14 @@
                     <li class="nav-item">
                         <a href="{% url 'change_password' %}" class="nav-link">Change Password</a>
                     </li>
+                    {% if user.is_staff %}
                     <li class="nav-item">
                         <a href="{% url 'add_product_view' %}" class="nav-link">Add Product</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{% url 'my_products' %}" class="nav-link">My Products</a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a href="{% url 'user_logout' %}" class="nav-link">Logout</a>
                     </li>
