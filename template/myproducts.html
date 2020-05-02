@@ -23,8 +23,8 @@
                             <td>{{p.seller.first_name}} {{p.seller.last_name}}</td>
                             <td>
                                 <button class="btn btn-success" data-toggle="modal" data-target="#m{{p.id}}"><i class="fa fa-eye"></i> view</button>
-                                <button class="btn btn-primary"><i class="fa fa-edit"></i> Edit</button>
-                                <button class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
+                                <a href="{% url 'update_product' %}?pid={{p.id}}" class="btn btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                                <a href="{% url 'delete_product' %}?pid={{p.id}}" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
                             </td>
                         </tr>
 

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from secondapp.models import Contact_Us, Category, register_table, add_product
 from django.contrib.auth.models import User
@@ -209,10 +209,47 @@ def single_product(request):
     return render(request,"single_product.html",context)
 
 def update_product(request):
-    pass
+    context ={}
+    cats = Category.objects.all().order_by("cat_name")
+    context["category"] = cats
+
+    pid = request.GET["pid"]
+    product = get_object_or_404(add_product,id=pid)
+    context["product"] = product
+
+    if request.method=="POST":
+        pn = request.POST["pname"]
+        ct_id = request.POST["pcat"]
+        pr = request.POST["pp"]
+        sp = request.POST["sp"]
+        des = request.POST["des"]
+        
+        cat_obj = Category.objects.get(id=ct_id)
+
+        product.product_name =pn
+        product.product_category =cat_obj
+        product.product_price =pr
+        product.sale_price =sp
+        product.details =des
+        if "pimg" in request.FILES:
+            img = request.FILES["pimg"]
+            product.product_image = img
+        product.save()
+        context["status"] = "Changes Saved Successfully"
+        context["id"] = pid
+    return render(request,"update_product.html",context)
 
 def delete_product(request):
-    pass
+    context = {}
+    if "pid" in request.GET:
+        pid = request.GET["pid"]
+        prd = get_object_or_404(add_product, id=pid)
+        context["product"] = prd
+
+        if "action" in request.GET:
+            prd.delete()
+            context["status"] = str(prd.product_name)+" removed Successfully!!!"
+    return render(request,"deleteproduct.html",context)
 
 def all_products(request):
     context = {}
