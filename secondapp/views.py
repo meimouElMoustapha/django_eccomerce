@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from secondapp.forms import add_product_form
+from django.db.models import Q
 
 def index(request):
     recent = Contact_Us.objects.all().order_by("-id")[:5]
@@ -253,6 +254,22 @@ def delete_product(request):
 
 def all_products(request):
     context = {}
+    cats = Category.objects.all().order_by("cat_name")
+    context["category"] = cats
     all_products = add_product.objects.all().order_by("product_name")
     context["products"] = all_products
+    if "qry" in request.GET:
+        q = request.GET["qry"]
+        # p = request.GET["price"]
+        prd = add_product.objects.filter(Q(product_name__icontains=q)|Q(product_category__cat_name__contains=q))
+        # prd = add_product.objects.filter(Q(product_name__icontains=q)& Q(sale_price__lt=p))
+        # prd = add_product.objects.filter(product_name__contains=q)
+        context["products"] = prd   
+        context["abcd"]="search"
+    if "cat" in request.GET:
+        cid = request.GET["cat"]
+        prd = add_product.objects.filter(product_category__id=cid)
+        context["products"] = prd   
+        context["abcd"]="search"
+
     return render(request,"allproducts.html",context)

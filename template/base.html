@@ -40,7 +40,7 @@
                             <a href="" class="nav-link dropdown-toggle" data-toggle="dropdown">Categories</a>
                             <div class="dropdown-menu">
                                 {% for c in category %}
-                                <a href="" class="dropdown-item">{{c.cat_name}}</a>
+                                <a href="{% url 'all_products' %}?cat={{c.id}}" class="dropdown-item">{{c.cat_name}}</a>
                                 {% endfor %}
                             </div>
                         </li>

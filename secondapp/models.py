@@ -63,7 +63,7 @@ class add_product(models.Model):
     product_name = models.CharField(max_length=250)
     product_category = models.ForeignKey(Category,on_delete = models.CASCADE )
     product_price = models.FloatField()
-    sale_price = models.FloatField()
+    sale_price = models.CharField(max_length=200)
     product_image = models.ImageField(upload_to="products/%Y/%m/%d")
     details = models.TextField()
 
