@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from secondapp.models import Contact_Us, Category, register_table, add_product
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
@@ -323,3 +323,39 @@ def sendemail(request):
             context["status"] = "Could not Send, Please check Internet Connection / Email Address"
             context["cls"] = "alert-danger"
     return render(request,"sendemail.html",context  )
+
+def forgotpass(request):
+    context = {}
+    if request.method=="POST":
+        un = request.POST["username"]
+        pwd = request.POST["npass"]
+
+        user = get_object_or_404(User,username=un)
+        user.set_password(pwd)
+        user.save()
+
+        login(request,user)
+        if user.is_superuser:
+            return HttpResponseRedirect("/admin")
+        else:
+            return HttpResponseRedirect("/cust_dashboard")
+        # context["status"] = "Password Changed Successfully!!!"
+
+    return render(request,"forgot_pass.html",context)
+
+import random
+
+def reset_password(request):
+    un = request.GET["username"]
+    try:
+        user = get_object_or_404(User,username=un)
+        otp = random.randint(1000,9999)
+        msz = "Dear {} \n{} is your One Time Password (OTP) \nDo not share it with others \nThanks&Regards \nMyWebsite".format(user.username, otp)
+        try:
+            email = EmailMessage("Account Verification",msz,to=[user.email])
+            email.send()
+            return JsonResponse({"status":"sent","email":user.email,"rotp":otp})
+        except:
+            return JsonResponse({"status":"error","email":user.email})
+    except:
+        return JsonResponse({"status":"failed"})

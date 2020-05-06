@@ -41,5 +41,7 @@ urlpatterns = [
     path("delete_product",views.delete_product, name="delete_product"),
     path("all_products",views.all_products, name="all_products"),
     path("sendemail",views.sendemail, name="sendemail"),
+    path("forgotpass",views.forgotpass, name="forgotpass"),
+    path("reset_password",views.reset_password,name="reset_password")
     
 ]+static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)
