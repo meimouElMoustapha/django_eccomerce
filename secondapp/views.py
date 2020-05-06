@@ -6,8 +6,19 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from secondapp.forms import add_product_form
 from django.db.models import Q
+from datetime import datetime
+from django.core.mail import EmailMessage
 
 def index(request):
+    # if "user_id"in request.COOKIES:
+    #     uid = request.COOKIES["user_id"]
+    #     usr = get_object_or_404(User,id=uid)
+    #     login(request,usr)
+    #     if usr.is_superuser:
+    #         return HttpResponseRedirect("/admin")
+    #     if usr.is_active:
+    #         return HttpResponseRedirect("/cust_dashboard")
+            
     recent = Contact_Us.objects.all().order_by("-id")[:5]
     cats = Category.objects.all().order_by("cat_name")
 
@@ -36,6 +47,14 @@ def contactpage(request):
     return render(request,"contact.html",{"messages":all_data,"category":cats})
 
 def register(request):
+    if "user_id"in request.COOKIES:
+        uid = request.COOKIES["user_id"]
+        usr = get_object_or_404(User,id=uid)
+        login(request,usr)
+        if usr.is_superuser:
+            return HttpResponseRedirect("/admin")
+        if usr.is_active:
+            return HttpResponseRedirect("/cust_dashboard")
     if request.method=="POST":
         fname = request.POST["first"]
         last = request.POST["last"]
@@ -77,7 +96,11 @@ def user_login(request):
             if user.is_superuser:
                 return HttpResponseRedirect("/admin")
             else:
-                return HttpResponseRedirect("/cust_dashboard")
+                res = HttpResponseRedirect("/cust_dashboard")
+                if "rememberme" in request.POST:
+                    res.set_cookie("user_id",user.id)
+                    res.set_cookie("date_login",datetime.now())
+                return res
             # if user.is_active:
             #     return HttpResponseRedirect("/cust_dashboard")
                 
@@ -102,7 +125,10 @@ def seller_dashboard(request):
 @login_required
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect("/")
+    res =  HttpResponseRedirect("/")
+    res.delete_cookie("user_id")
+    res.delete_cookie("date_login")
+    return res
 
 def edit_profile(request):
     context = {}
@@ -273,3 +299,27 @@ def all_products(request):
         context["abcd"]="search"
 
     return render(request,"allproducts.html",context)
+
+def sendemail(request):
+    context = {}
+    ch = register_table.objects.filter(user__id=request.user.id)
+    if len(ch)>0:
+        data = register_table.objects.get(user__id=request.user.id)
+        context["data"] = data
+
+    if request.method=="POST":
+    
+        rec = request.POST["to"].split(",")
+        print(rec)
+        sub = request.POST["sub"]
+        msz = request.POST["msz"]
+
+        try:
+            em = EmailMessage(sub,msz,to=rec)
+            em.send()
+            context["status"] = "Email Sent"
+            context["cls"] = "alert-success"
+        except:
+            context["status"] = "Could not Send, Please check Internet Connection / Email Address"
+            context["cls"] = "alert-danger"
+    return render(request,"sendemail.html",context  )
