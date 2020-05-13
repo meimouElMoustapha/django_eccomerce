@@ -1,6 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, reverse
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from secondapp.models import Contact_Us, Category, register_table, add_product
+from secondapp.models import Contact_Us, Category, register_table, add_product,cart,Order
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -359,3 +359,110 @@ def reset_password(request):
             return JsonResponse({"status":"error","email":user.email})
     except:
         return JsonResponse({"status":"failed"})
+
+def add_to_cart(request):
+    context={}
+    items = cart.objects.filter(user__id=request.user.id,status=False)
+    context["items"] = items
+
+    if request.user.is_authenticated:
+        if request.method=="POST":
+            pid = request.POST["pid"]
+            qty = request.POST["qty"]
+            is_exist = cart.objects.filter(product__id=pid,user__id=request.user.id,status=False)
+            if len(is_exist)>0:
+                context["msz"] = "Item Already Exists in Your Cart"
+                context["cls"] = "alert alert-warning"
+            else:    
+                product =get_object_or_404(add_product,id=pid)
+                usr = get_object_or_404(User,id=request.user.id)
+                c = cart(user=usr,product=product,quantity=qty)
+                c.save()
+                context["msz"] = "{} Added in Your Cart".format(product.product_name)
+                context["cls"] = "alert alert-success"
+    else:
+        context["status"] = "Please Login First to View Your Cart"
+    return render(request,"cart.html",context)
+
+def get_cart_data(request):
+    items = cart.objects.filter(user__id=request.user.id, status=False)
+    sale,total,quantity =0,0,0
+    for i in items:
+        sale += float(i.product.sale_price)*i.quantity
+        total += float(i.product.product_price)*i.quantity
+        quantity+= int(i.quantity)
+
+    res = {
+        "total":total,"offer":sale,"quan":quantity,
+    }
+    return JsonResponse(res)
+
+def change_quan(request):
+    if "quantity" in request.GET:
+        cid = request.GET["cid"]
+        qty = request.GET["quantity"]
+        cart_obj = get_object_or_404(cart,id=cid)
+        cart_obj.quantity = qty
+        cart_obj.save()
+        return HttpResponse(cart_obj.quantity)
+
+    if "delete_cart" in request.GET:
+        id = request.GET["delete_cart"]
+        cart_obj = get_object_or_404(cart,id=id)
+        cart_obj.delete()
+        return HttpResponse(1)
+
+from paypal.standard.forms import PayPalPaymentsForm
+from django.conf import settings 
+
+def process_payment(request):
+    items = cart.objects.filter(user_id__id=request.user.id,status=False)
+    products=""
+    amt=0
+    inv = "INV10001-"
+    cart_ids = ""
+    p_ids =""
+    for j in items:
+        products += str(j.product.product_name)+"\n"
+        p_ids += str(j.product.id)+","
+        amt += float(j.product.sale_price)
+        inv +=  str(j.id)
+        cart_ids += str(j.id)+","
+
+    paypal_dict = {
+        'business': settings.PAYPAL_RECEIVER_EMAIL,
+        'amount': str(amt),
+        'item_name': products,
+        'invoice': inv,
+        'notify_url': 'http://{}{}'.format("127.0.0.1:8000",
+                                           reverse('paypal-ipn')),
+        'return_url': 'http://{}{}'.format("127.0.0.1:8000",
+                                           reverse('payment_done')),
+        'cancel_return': 'http://{}{}'.format("127.0.0.1:8000",
+                                              reverse('payment_cancelled')),
+    }
+    usr = User.objects.get(username=request.user.username)
+    ord = Order(cust_id=usr,cart_ids=cart_ids,product_ids=p_ids)
+    ord.save()
+    ord.invoice_id = str(ord.id)+inv
+    ord.save()
+    request.session["order_id"] = ord.id
+    
+    form = PayPalPaymentsForm(initial=paypal_dict)
+    return render(request, 'process_payment.html', {'form': form})
+
+def payment_done(request):
+    if "order_id" in request.session:
+        order_id = request.session["order_id"]
+        ord_obj = get_object_or_404(Order,id=order_id)
+        ord_obj.status=True
+        ord_obj.save()
+        
+        for i in ord_obj.cart_ids.split(",")[:-1]:
+            cart_object = cart.objects.get(id=i)
+            cart_object.status=True
+            cart_object.save()
+    return render(request,"payment_success.html")
+
+def payment_cancelled(request):
+    return render(request,"payment_failed.html")

@@ -42,6 +42,13 @@ urlpatterns = [
     path("all_products",views.all_products, name="all_products"),
     path("sendemail",views.sendemail, name="sendemail"),
     path("forgotpass",views.forgotpass, name="forgotpass"),
-    path("reset_password",views.reset_password,name="reset_password")
-    
+    path("reset_password",views.reset_password,name="reset_password"),
+    path("cart",views.add_to_cart,name="cart"),
+    path("get_cart_data",views.get_cart_data,name="get_cart_data"),
+    path("change_quan",views.change_quan,name="change_quan"),
+
+    path('paypal/', include('paypal.standard.ipn.urls')),
+    path('process_payment',views.process_payment,name="process_payment"),
+    path('payment_done',views.payment_done,name="payment_done"),
+    path('payment_cancelled',views.payment_cancelled,name="payment_cancelled"),
 ]+static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

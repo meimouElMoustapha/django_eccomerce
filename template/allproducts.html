@@ -36,6 +36,15 @@
                             <span>&#8377; {{i.sale_price}}</span>
                         </h4>
                         <h5><strong>{{i.product_category.cat_name}}</strong></h5>
+                        <form action="{% url 'cart' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{i.id}}" name="pid">
+                            <input type="hidden" value="1" name="qty">
+                            <button type="submit" class="btn btn-success btn-block">
+                                <i class="fa fa-shopping-cart"></i>
+                                Add To Cart
+                            </button>
+                        </form>
                     </div>
                 </div>
             {% endfor %}

@@ -70,3 +70,24 @@ class add_product(models.Model):
     def __str__(self):
         return self.product_name
 
+class cart(models.Model):
+    user =models.ForeignKey(User,on_delete = models.CASCADE)
+    product = models.ForeignKey(add_product,on_delete = models.CASCADE)
+    quantity = models.IntegerField()
+    status = models.BooleanField(default=False)
+    added_on =models.DateTimeField(auto_now_add=True,null=True)
+    update_on = models.DateTimeField(auto_now=True,null=True)
+
+    def __str__(self):
+        return self.user.username
+
+class Order(models.Model):
+    cust_id = models.ForeignKey(User,on_delete=models.CASCADE)
+    cart_ids = models.CharField(max_length=250)
+    product_ids = models.CharField(max_length=250)
+    invoice_id = models.CharField(max_length=250)
+    status = models.BooleanField(default=False)
+    processed_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.cust_id.username

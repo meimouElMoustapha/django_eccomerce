@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'secondapp',
     'bootstrap4',
+    'paypal.standard.ipn',   
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,7 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'sachtechsolutionpvtltd@gmail.com'
 EMAIL_HOST_PASSWORD = "YOUR EMAIL   PASSWORD"
 EMAIL_USE_TLS = True
+
+PAYPAL_RECEIVER_EMAIL = 'sts.amandeepkaur@gmail.com'
+ 
+PAYPAL_TEST = True

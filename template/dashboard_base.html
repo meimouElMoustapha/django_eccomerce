@@ -38,6 +38,9 @@
                     <li class="nav-item">
                         <a href="{% url 'change_password' %}" class="nav-link">Change Password</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{% url 'cart' %}" class="nav-link">My Cart</a>
+                    </li>
                     {% if user.is_staff %}
                     <li class="nav-item">
                         <a href="{% url 'add_product_view' %}" class="nav-link">Add Product</a>
@@ -48,6 +51,7 @@
                     <li class="nav-item">
                         <a href="{% url 'sendemail' %}" class="nav-link">Send Email</a>
                     </li>
+                   
                     {% endif %}
                     <li class="nav-item">
                         <a href="{% url 'user_logout' %}" class="nav-link">Logout</a>
