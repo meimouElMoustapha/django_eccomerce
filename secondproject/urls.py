@@ -51,4 +51,5 @@ urlpatterns = [
     path('process_payment',views.process_payment,name="process_payment"),
     path('payment_done',views.payment_done,name="payment_done"),
     path('payment_cancelled',views.payment_cancelled,name="payment_cancelled"),
+    path('order_history',views.order_history,name="order_history"),
 ]+static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

@@ -467,4 +467,27 @@ def payment_done(request):
 def payment_cancelled(request):
     return render(request,"payment_failed.html")
 
-    
+def order_history(request):
+    context = {}
+    ch = register_table.objects.filter(user__id=request.user.id)
+    if len(ch)>0:
+        data = register_table.objects.get(user__id=request.user.id)
+        context["data"] = data
+
+    all_orders = []
+    orders = Order.objects.filter(cust_id__id=request.user.id).order_by("-id")
+    for order in orders:
+        products = []
+        for id in order.product_ids.split(",")[:-1]:
+            pro = get_object_or_404(add_product, id=id)
+            products.append(pro)
+        ord = {
+            "order_id":order.id,
+            "products":products,
+            "invoice":order.invoice_id,
+            "status":order.status,
+            "date":order.processed_on,
+        }
+        all_orders.append(ord)
+    context["order_history"] = all_orders
+    return render(request,"order_history.html",context)
