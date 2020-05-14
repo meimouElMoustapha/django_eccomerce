@@ -466,3 +466,5 @@ def payment_done(request):
 
 def payment_cancelled(request):
     return render(request,"payment_failed.html")
+
+    
