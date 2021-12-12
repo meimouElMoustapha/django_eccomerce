@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'secondapp',
-    'bootstrap4',
+ 
     'paypal.standard.ipn',   
 ]
 

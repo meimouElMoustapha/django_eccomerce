@@ -491,3 +491,8 @@ def order_history(request):
         all_orders.append(ord)
     context["order_history"] = all_orders
     return render(request,"order_history.html",context)
+
+
+
+
+# https://www.youtube.com/watch?v=ucvKreEKb_M&ab_channel=CodingWithAmanDhillon
